@@ -98,24 +98,12 @@ int sys_clone(void)
 	return clone(stack);
 }
 
-int sys_join(void)
+int sys_futex_wait(void)
 {
-	return join();
+	return -1;
 }
 
-int sys_mutex_lock(void)
+int sys_futex_wake(void)
 {
-	char* l;
-	if ( argptr(0, &l, 4) < 0 )
-		return -1;
-	return mutex_lock((int*)l);
+	return -1;
 }
-
-int sys_mutex_unlock(void)
-{
-	char *l;
-	if ( argptr(0, &l, 4) , 0)
-		return -1;
-	return mutex_unlock((int*)l);
-}
-

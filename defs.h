@@ -191,9 +191,8 @@ void swapread(char* ptr, int blkno);
 void swapwrite(char* ptr, int blkno);
 
 int clone(char* stack);
-int join(void);
-int mutex_lock(volatile int* l);
-int mutex_unlock(volatile int* l);
+int futex_wait(int* uaddr, int val);
+int futex_wake(int* uaddr);
 
 // number of elements in fixed-size array
 #define NELEM(x) (sizeof(x)/sizeof((x)[0]))

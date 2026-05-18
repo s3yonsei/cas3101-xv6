@@ -107,9 +107,8 @@ extern int sys_swapread(void);
 extern int sys_swapwrite(void);
 extern int sys_frees(void);
 extern int sys_clone(void);
-extern int sys_join(void);
-extern int sys_mutex_lock(void);
-extern int sys_mutex_unlock(void);
+extern int sys_futex_wait(void);
+extern int sys_futex_wake(void);
  
 
 static int (*syscalls[])(void) = {
@@ -137,10 +136,9 @@ static int (*syscalls[])(void) = {
 [SYS_swapread]	sys_swapread,
 [SYS_swapwrite] sys_swapwrite,
 [SYS_frees] sys_frees,
-[SYS_join]	sys_join,
 [SYS_clone]	sys_clone,
-[SYS_mutex_lock]	sys_mutex_lock,
-[SYS_mutex_unlock]	sys_mutex_unlock,
+[SYS_futex_wait]	sys_futex_wait,
+[SYS_futex_wake]	sys_futex_wake,
 };
 
 void

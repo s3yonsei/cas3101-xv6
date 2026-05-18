@@ -27,9 +27,8 @@ int swapread(const char*, int);
 int swapwrite(const char*, int);
 int frees(void);
 int clone(char*);
-int join(void);
-int mutex_lock(int*);
-int mutex_unlock(int *);
+int futex_wait(int*, int);
+int futex_wake(int*);
 
 // ulib.c
 int stat(const char*, struct stat*);
@@ -46,4 +45,7 @@ void free(void*);
 int atoi(const char*);
 int thread_create(void(*func)(void*), void *);
 int thread_join(int);
-
+int mutex_lock(int*);
+int mutex_unlock(int*);
+int cond_wait(int*, int*);
+int cond_signal(int*);

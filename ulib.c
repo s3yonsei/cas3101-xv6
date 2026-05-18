@@ -115,3 +115,22 @@ int thread_join(int tid)
 	return -1;
 }
 
+int mutex_lock(int *l)
+{
+	return -1;
+}
+
+int mutex_unlock(int *l)
+{
+	return -1;
+}
+
+int cond_wait(int *cv, int *m)
+{
+	return -1;
+}
+
+int cond_signal(int *cv)
+{
+	return -1;
+}

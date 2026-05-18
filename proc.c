@@ -539,7 +539,12 @@ int clone(char* stack)
 	return -1;
 }
 
-int join(void)
+int futex_wait(int *uaddr, int val)
+{
+	return -1;
+}
+
+int futex_wake(int *uaddr)
 {
 	return -1;
 }
