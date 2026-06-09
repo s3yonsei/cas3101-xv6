@@ -12,6 +12,12 @@ struct {
   struct proc proc[NPROC];
 } ptable;
 
+static struct spinlock kthreadtest_lock;
+static int kthreadtest_started;
+static int kthreadtest_seq;
+static int kthreadtest_done;
+static int kthreadtest_value;
+
 static struct proc *initproc;
 
 int nextpid = 1;
@@ -19,11 +25,13 @@ extern void forkret(void);
 extern void trapret(void);
 
 static void wakeup1(void *chan);
+static void kthreadtest_worker(void*);
 
 void
 pinit(void)
 {
   initlock(&ptable.lock, "ptable");
+  initlock(&kthreadtest_lock, "ktest");
 }
 
 // Must be called with interrupts disabled
@@ -530,6 +538,59 @@ procdump(void)
       for(i=0; i<10 && pc[i] != 0; i++)
         cprintf(" %p", pc[i]);
     }
-    cprintf("\n");
+  cprintf("\n");
   }
+}
+
+int
+kthread_create(char *name, void (*fn)(void*), void *arg)
+{
+  return 0;
+}
+
+static void
+kthreadtest_worker(void *arg)
+{
+  int local;
+
+  (void)arg;
+  local = 0;
+  acquire(&kthreadtest_lock);
+  for(;;){
+    while(kthreadtest_seq == local)
+      sleep(&kthreadtest_seq, &kthreadtest_lock);
+    local = kthreadtest_seq;
+    kthreadtest_value = 1000 + local;
+    kthreadtest_done = local;
+    wakeup(&kthreadtest_done);
+  }
+}
+
+int
+kthread_test(void)
+{
+  int target, value;
+
+  acquire(&kthreadtest_lock);
+  if(!kthreadtest_started){
+    if(kthread_create("ktest", kthreadtest_worker, 0) < 0){
+      release(&kthreadtest_lock);
+      return -1;
+    }
+    kthreadtest_started = 1;
+  }
+
+  target = ++kthreadtest_seq;
+  wakeup(&kthreadtest_seq);
+  while(kthreadtest_done != target){
+    if(myproc()->killed){
+      release(&kthreadtest_lock);
+      return -1;
+    }
+    sleep(&kthreadtest_done, &kthreadtest_lock);
+  }
+  value = kthreadtest_value;
+  release(&kthreadtest_lock);
+
+  return value;
 }

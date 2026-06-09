@@ -13,6 +13,8 @@ struct cpu {
 extern struct cpu cpus[NCPU];
 extern int ncpu;
 
+struct iouring_state;
+
 //PAGEBREAK: 17
 // Saved registers for kernel context switches.
 // Don't need to save all the segment registers (%cs, etc),
@@ -46,6 +48,10 @@ struct proc {
   struct context *context;     // swtch() here to run process
   void *chan;                  // If non-zero, sleeping on chan
   int killed;                  // If non-zero, have been killed
+  int is_kthread;              // Runs only in the kernel
+  void (*kthread_fn)(void*);   // Kernel thread entry point
+  void *kthread_arg;           // Kernel thread argument
+  struct iouring_state *ioring;// Active io_uring owned by this process
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)

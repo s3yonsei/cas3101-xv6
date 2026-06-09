@@ -1,5 +1,8 @@
 struct stat;
 struct rtcdate;
+struct io_uring;
+struct io_uring_sqe;
+struct io_uring_cqe;
 
 // system calls
 int fork(void);
@@ -25,6 +28,10 @@ int sleep(int);
 int uptime(void);
 int swapread(const char*, int);
 int swapwrite(const char*, int);
+int iouring_setup(struct io_uring*);
+int iouring_wait(struct io_uring*);
+int iouring_close(struct io_uring*);
+int kthread_test(void);
 
 // ulib.c
 int stat(const char*, struct stat*);
@@ -39,3 +46,5 @@ void* memset(void*, int, uint);
 void* malloc(uint);
 void free(void*);
 int atoi(const char*);
+int io_uring_prep(struct io_uring*, int, int, void*, int, uint);
+int io_uring_wait_cqe(struct io_uring*, struct io_uring_cqe*);

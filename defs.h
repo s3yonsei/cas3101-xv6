@@ -2,6 +2,7 @@ struct buf;
 struct context;
 struct file;
 struct inode;
+struct io_uring;
 struct pipe;
 struct proc;
 struct rtcdate;
@@ -33,6 +34,12 @@ void            fileinit(void);
 int             fileread(struct file*, char*, int n);
 int             filestat(struct file*, struct stat*);
 int             filewrite(struct file*, char*, int n);
+
+// iouring.c
+void            iouringinit(void);
+int             iouring_setup(struct io_uring*);
+int             iouring_wait(struct io_uring*);
+int             iouring_close(struct io_uring*);
 
 // fs.c
 void            readsb(int dev, struct superblock *sb);
@@ -108,6 +115,8 @@ void            exit(void);
 int             fork(void);
 int             growproc(int);
 int             kill(int);
+int             kthread_create(char*, void (*)(void*), void*);
+int             kthread_test(void);
 struct cpu*     mycpu(void);
 struct proc*    myproc();
 void            pinit(void);
@@ -175,6 +184,7 @@ void            seginit(void);
 void            kvmalloc(void);
 pde_t*          setupkvm(void);
 char*           uva2ka(pde_t*, char*);
+int             copyin(pde_t*, char*, uint, uint);
 int             allocuvm(pde_t*, uint, uint);
 int             deallocuvm(pde_t*, uint, uint);
 void            freevm(pde_t*);

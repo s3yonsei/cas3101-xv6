@@ -105,6 +105,11 @@ extern int sys_write(void);
 extern int sys_uptime(void);
 extern int sys_swapread(void);
 extern int sys_swapwrite(void);
+extern int sys_iouring_setup(void);
+extern int sys_iouring_wait(void);
+extern int sys_iouring_close(void);
+extern int sys_kthread_test(void);
+ 
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -130,6 +135,10 @@ static int (*syscalls[])(void) = {
 [SYS_close]   sys_close,
 [SYS_swapread]	sys_swapread,
 [SYS_swapwrite] sys_swapwrite,
+[SYS_iouring_setup]	sys_iouring_setup,
+[SYS_iouring_wait]	sys_iouring_wait,
+[SYS_iouring_close]	sys_iouring_close,
+[SYS_kthread_test]	sys_kthread_test,
 };
 
 void

@@ -5,6 +5,7 @@
 #include "mmu.h"
 #include "proc.h"
 #include "x86.h"
+#include "fs.h"
 
 static void startothers(void);
 static void mpmain(void)  __attribute__((noreturn));
@@ -26,6 +27,7 @@ main(void)
   ioapicinit();    // another interrupt controller
   consoleinit();   // console hardware
   uartinit();      // serial port
+  cprintf("mpcheck: detected %d cpu(s)\n", ncpu);
   pinit();         // process table
   tvinit();        // trap vectors
   binit();         // buffer cache
@@ -34,6 +36,7 @@ main(void)
   startothers();   // start other processors
   kinit2(P2V(4*1024*1024), P2V(PHYSTOP)); // must come after startothers()
   userinit();      // first user process
+  iouringinit();   // async I/O worker
   mpmain();        // finish this processor's setup
 }
 
@@ -51,7 +54,10 @@ mpenter(void)
 static void
 mpmain(void)
 {
-  cprintf("cpu%d: starting %d\n", cpuid(), cpuid());
+  int id;
+
+  id = cpuid();
+  cprintf("mpcheck: cpu%d online (ncpu=%d)\n", id, ncpu);
   idtinit();       // load idt register
   xchg(&(mycpu()->started), 1); // tell startothers() we're up
   scheduler();     // start running processes
