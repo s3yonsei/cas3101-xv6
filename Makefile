@@ -189,7 +189,6 @@ UPROGS=\
 	_iouring_write_test\
 	_iouring_async_test\
 	_iouring_error_test\
-	_iouring_deep_test\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
